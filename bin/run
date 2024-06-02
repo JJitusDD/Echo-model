@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+set -e
+
+log() {
+  msg=$1
+  echo "Start_script: ${msg}"
+}
+
+keysMountedPath="/mnt/secrets"
+keys="config.json private01.pem public01.cer"
+
+for key in ${keys}; do
+  if [ ! -f ${keysMountedPath}/${key} ]; then
+    echo "Not found ${keysMountedPath}/${key} !"
+    exit 1
+  fi
+
+  echo "Found ${key} in ${keysMountedPath}"
+  if [ -f ${key} ]; then
+    echo "Backup old key: ${key} -> ${key}.bak"
+    mv ${key} ${key}.bak
+  fi
+  if [[ "${key}" =~ .*\.base64$ ]]; then
+    base64 -d ${keysMountedPath}/${key} > ${key%.base64}
+    echo "Created ${key%.base64}"
+  else
+    ln -s ${keysMountedPath}/${key} ${key}
+    echo "Linked ${key} -> ${keysMountedPath}/${key}"
+  fi
+  echo
+done
+
+if [ ${#@} -eq 0 ]; then
+  log "Not found argument to start application !!!"
+  exit 1
+fi
+
+startCommand=$1
+workdir=$(pwd)
+
+if [ ! -x ${startCommand} ]; then
+  log "Not found binary ${workdir}/${startCommand} or binary is not executable file !!!"
+  exit 1
+fi
+
+exec ${workdir}/${startCommand}
+
