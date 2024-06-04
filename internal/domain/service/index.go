@@ -1,6 +1,8 @@
 package service
 
-import "echo-model/internal/infrastructure/facade"
+import (
+	"echo-model/internal/infrastructure/facade"
+)
 
 type Service struct {
 	*facade.EchoModelFacade

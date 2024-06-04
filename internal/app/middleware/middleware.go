@@ -6,12 +6,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/labstack/echo/v4"
+	uuid "github.com/satori/go.uuid"
+	"github.com/sirupsen/logrus"
 	"io/ioutil"
 	"net/http"
 	"strings"
-
-	uuid "github.com/satori/go.uuid"
-	"github.com/sirupsen/logrus"
 )
 
 func LogCollect(l *logrus.Logger) echo.MiddlewareFunc {

@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"auto_reconcile_service_v2/configs"
+	"echo-model/config"
 
 	"github.com/go-pg/pg/v9"
 	vendor_postgres "gorm.io/driver/postgres"

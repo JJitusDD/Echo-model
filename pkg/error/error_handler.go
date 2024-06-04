@@ -1,8 +1,9 @@
 package error
 
 import (
-	"echo-model/pkg/response_definition"
+	"echo-model/internal/domain/model/response"
 	"fmt"
+
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 	"net/http"
@@ -18,8 +19,8 @@ func CustomHTTPErrorHandler(l *logrus.Logger) echo.HTTPErrorHandler {
 				"trace_id": c.Get("trace_id"),
 			}).Error("echo http error")
 
-			res := response_definition.Response{
-				Meta: response_definition.Meta{
+			res := response.Response{
+				Meta: response.Meta{
 					Code:    he.Code,
 					Message: he.Message,
 				},
@@ -28,6 +29,8 @@ func CustomHTTPErrorHandler(l *logrus.Logger) echo.HTTPErrorHandler {
 			if he.Internal != nil {
 				res.Meta.Msg = he.Internal.Error()
 			}
+
+			err = c.JSON(he.Code, res)
 			return
 		} else if validationErrs, ok := err.(validator.ValidationErrors); ok {
 			var messages error
@@ -51,9 +54,9 @@ func CustomHTTPErrorHandler(l *logrus.Logger) echo.HTTPErrorHandler {
 				"trace_id": c.Get("trace_id"),
 			}).Error("validator error")
 
-			// Return the validation error messages as a JSON response_definition.Response
-			c.JSON(http.StatusBadRequest, response_definition.Response{
-				Meta: response_definition.Meta{
+			// Return the validation error messages as a JSON response.Response
+			c.JSON(http.StatusBadRequest, response.Response{
+				Meta: response.Meta{
 					Code:    http.StatusBadRequest,
 					Message: nil,
 					Msg:     messages.Error(),
@@ -66,8 +69,8 @@ func CustomHTTPErrorHandler(l *logrus.Logger) echo.HTTPErrorHandler {
 				"trace_id": c.Get("trace_id"),
 			}).Error("workflow error handler")
 
-			c.JSON(http.StatusBadGateway, response_definition.Response{
-				Meta: response_definition.Meta{
+			c.JSON(http.StatusBadGateway, response.Response{
+				Meta: response.Meta{
 					Code:    http.StatusBadGateway,
 					Msg:     we.Error(),
 					Message: we,
@@ -80,8 +83,8 @@ func CustomHTTPErrorHandler(l *logrus.Logger) echo.HTTPErrorHandler {
 				"trace_id": c.Get("trace_id"),
 			}).Error("activity error handler")
 
-			c.JSON(http.StatusBadGateway, response_definition.Response{
-				Meta: response_definition.Meta{
+			c.JSON(http.StatusBadGateway, response.Response{
+				Meta: response.Meta{
 					Code:    http.StatusBadGateway,
 					Msg:     ae.Error(),
 					Message: ae,
@@ -94,8 +97,8 @@ func CustomHTTPErrorHandler(l *logrus.Logger) echo.HTTPErrorHandler {
 				"trace_id": c.Get("trace_id"),
 			}).Error("server error handler")
 
-			c.JSON(http.StatusBadGateway, response_definition.Response{
-				Meta: response_definition.Meta{
+			c.JSON(http.StatusBadGateway, response.Response{
+				Meta: response.Meta{
 					Code:    http.StatusBadGateway,
 					Msg:     se.Error(),
 					Message: se,
@@ -108,8 +111,8 @@ func CustomHTTPErrorHandler(l *logrus.Logger) echo.HTTPErrorHandler {
 				"trace_id": c.Get("trace_id"),
 			}).Error("terminated error handler")
 
-			c.JSON(http.StatusBadGateway, response_definition.Response{
-				Meta: response_definition.Meta{
+			c.JSON(http.StatusBadGateway, response.Response{
+				Meta: response.Meta{
 					Code:    http.StatusBadGateway,
 					Msg:     te.Error(),
 					Message: te,
@@ -122,8 +125,8 @@ func CustomHTTPErrorHandler(l *logrus.Logger) echo.HTTPErrorHandler {
 				"trace_id": c.Get("trace_id"),
 			}).Error("timeout error handler")
 
-			c.JSON(http.StatusBadGateway, response_definition.Response{
-				Meta: response_definition.Meta{
+			c.JSON(http.StatusBadGateway, response.Response{
+				Meta: response.Meta{
 					Code:    http.StatusBadGateway,
 					Msg:     toe.Error(),
 					Message: toe,
@@ -136,8 +139,8 @@ func CustomHTTPErrorHandler(l *logrus.Logger) echo.HTTPErrorHandler {
 				"trace_id": c.Get("trace_id"),
 			}).Error("unknow workflow error handler")
 
-			c.JSON(http.StatusBadGateway, response_definition.Response{
-				Meta: response_definition.Meta{
+			c.JSON(http.StatusBadGateway, response.Response{
+				Meta: response.Meta{
 					Code:    http.StatusBadGateway,
 					Msg:     ue.Error(),
 					Message: ue,
@@ -150,8 +153,8 @@ func CustomHTTPErrorHandler(l *logrus.Logger) echo.HTTPErrorHandler {
 				"trace_id": c.Get("trace_id"),
 			}).Error("unknow workflow error handler")
 
-			c.JSON(http.StatusBadGateway, response_definition.Response{
-				Meta: response_definition.Meta{
+			c.JSON(http.StatusBadGateway, response.Response{
+				Meta: response.Meta{
 					Code:    http.StatusBadGateway,
 					Msg:     pe.Error(),
 					Message: pe,
@@ -160,8 +163,8 @@ func CustomHTTPErrorHandler(l *logrus.Logger) echo.HTTPErrorHandler {
 			})
 			return
 		} else {
-			c.JSON(http.StatusBadGateway, response_definition.Response{
-				Meta: response_definition.Meta{
+			c.JSON(http.StatusBadGateway, response.Response{
+				Meta: response.Meta{
 					Code:    http.StatusBadGateway,
 					Msg:     err.Error(),
 					Message: pe,

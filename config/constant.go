@@ -10,6 +10,10 @@ type Config struct {
 	TemporalConfig TemporalConfig `json:"temporal_config" mapstructure:"temporal_config"`
 	SFTP           SFTPConfig     `json:"sftp" mapstructure:"sftp"`
 	ENV            string         `json:"env" mapstructure:"env"`
+
+	JwtSecret    string `json:"jwt_secret" mapstructure:"jwt_secret"`
+	ApiSecretKey string `json:"api_secret_key" mapstructure:"api_secret_key"`
+	VerifyHash   bool   `json:"verify_hash" mapstructure:"verify_hash"`
 }
 
 type SFTPConfig struct {

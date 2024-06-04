@@ -4,7 +4,7 @@ import (
 	"strings"
 	"time"
 
-	"auto_reconcile_service_v2/configs"
+	"echo-model/config"
 
 	"github.com/IBM/sarama"
 	"github.com/sirupsen/logrus"

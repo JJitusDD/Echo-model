@@ -2,6 +2,7 @@ package app
 
 import (
 	"echo-model/config"
+	_ "echo-model/docs"
 	"echo-model/internal/app/middleware"
 	"echo-model/internal/app/routers"
 	"echo-model/internal/domain/service"
