@@ -2,6 +2,7 @@ package facade
 
 import (
 	"echo-model/config"
+	"echo-model/internal/domain/repository"
 	loggers "echo-model/pkg/logger"
 	"github.com/sirupsen/logrus"
 )
@@ -15,6 +16,7 @@ type EchoModelFacade struct {
 	//WorkflowLogs             repository.IWorkflowLogs
 	//KafkaConsumer            sarama.Consumer
 	//Temporal                 temporal_client.Client
+	User repository.User
 }
 
 func NewEchoModelFacade(config *configs.Config) *EchoModelFacade {

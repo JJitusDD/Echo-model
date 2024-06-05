@@ -8,7 +8,7 @@ log() {
 }
 
 keysMountedPath="/mnt/secrets"
-keys="config.json private01.pem public01.cer"
+keys="config.json private_key.pem public_key.cer"
 
 for key in ${keys}; do
   if [ ! -f ${keysMountedPath}/${key} ]; then

@@ -1,6 +1,8 @@
 package app
 
 import (
+	"strings"
+
 	"echo-model/config"
 	_ "echo-model/docs"
 	"echo-model/internal/app/middleware"
@@ -8,12 +10,15 @@ import (
 	"echo-model/internal/domain/service"
 	"echo-model/internal/infrastructure/facade"
 	error_internal "echo-model/pkg/error"
+	"echo-model/pkg/helper/crypt"
 	"github.com/go-playground/validator/v10"
+	"github.com/golang-jwt/jwt/v5"
+	echojwt "github.com/labstack/echo-jwt/v4"
 	"github.com/labstack/echo/v4"
 	echo_middleware "github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/gommon/log"
-	echoSwagger "github.com/swaggo/echo-swagger"
-	"strings"
+	"github.com/sirupsen/logrus"
+	"github.com/swaggo/echo-swagger"
 )
 
 type App struct {
@@ -45,9 +50,9 @@ func Initialize() (*App, error) {
 	e.Logger.SetLevel(log.INFO)
 
 	if confg.ENV != "PRODUCTION" {
-		//f.Logger.WithFields(logrus.Fields{
-		//	"config": confg,
-		//}).Info("Logging config")
+		f.Logger.WithFields(logrus.Fields{
+			"config": confg,
+		}).Info("Logging config")
 	}
 
 	// setup Validator
@@ -70,6 +75,14 @@ func Initialize() (*App, error) {
 	e.HTTPErrorHandler = error_internal.CustomHTTPErrorHandler(f.Logger)
 
 	newServ := service.NewService(f)
+
+	// Custom jwt config
+	e.Use(echojwt.WithConfig(echojwt.Config{
+		SigningKey: []byte(newServ.Config.JwtSecret),
+		NewClaimsFunc: func(c echo.Context) jwt.Claims {
+			return &crypt.JwtCustomClaims{}
+		},
+	}))
 
 	routers.Setup(e, newServ)
 	e.GET("/swagger/*", echoSwagger.WrapHandler)

@@ -11,9 +11,10 @@ type Config struct {
 	SFTP           SFTPConfig     `json:"sftp" mapstructure:"sftp"`
 	ENV            string         `json:"env" mapstructure:"env"`
 
-	JwtSecret    string `json:"jwt_secret" mapstructure:"jwt_secret"`
-	ApiSecretKey string `json:"api_secret_key" mapstructure:"api_secret_key"`
-	VerifyHash   bool   `json:"verify_hash" mapstructure:"verify_hash"`
+	JwtSecret       string `json:"jwt_secret" mapstructure:"jwt_secret"`
+	ApiSecretKey    string `json:"api_secret_key" mapstructure:"api_secret_key"`
+	VerifyHash      bool   `json:"verify_hash" mapstructure:"verify_hash"`
+	HashAccessToken string `json:"hash_access_token" mapstructure:"hash_access_token"`
 }
 
 type SFTPConfig struct {

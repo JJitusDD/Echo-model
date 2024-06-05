@@ -7,11 +7,14 @@ require (
 	github.com/go-pg/pg/v9 v9.2.1
 	github.com/go-playground/validator/v10 v10.21.0
 	github.com/go-redis/redis/v8 v8.11.5
+	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/labstack/echo-jwt/v4 v4.2.0
 	github.com/labstack/echo/v4 v4.12.0
 	github.com/labstack/gommon v0.4.2
+	github.com/mergermarket/go-pkcs7 v0.0.0-20170926155232-153b18ea13c9
 	github.com/satori/go.uuid v1.2.0
 	github.com/sirupsen/logrus v1.9.3
+	github.com/spf13/cast v1.6.0
 	github.com/spf13/viper v1.19.0
 	github.com/swaggo/echo-swagger v1.4.1
 	github.com/swaggo/swag v1.8.12
@@ -46,7 +49,6 @@ require (
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
-	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/golang-jwt/jwt/v5 v5.0.0 // indirect
 	github.com/golang/mock v1.6.0 // indirect
 	github.com/golang/protobuf v1.5.4 // indirect
@@ -87,7 +89,6 @@ require (
 	github.com/segmentio/encoding v0.1.15 // indirect
 	github.com/sourcegraph/conc v0.3.0 // indirect
 	github.com/spf13/afero v1.11.0 // indirect
-	github.com/spf13/cast v1.6.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/stretchr/objx v0.5.2 // indirect
 	github.com/stretchr/testify v1.9.0 // indirect

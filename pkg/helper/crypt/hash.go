@@ -2,6 +2,7 @@ package crypt
 
 import (
 	"crypto/hmac"
+	"crypto/md5"
 	"crypto/sha1"
 	"crypto/sha256"
 	"encoding/base64"
@@ -9,6 +10,12 @@ import (
 	"fmt"
 	"sort"
 )
+
+func CreateHash(key string) string {
+	hasher := md5.New()
+	hasher.Write([]byte(key))
+	return hex.EncodeToString(hasher.Sum(nil))
+}
 
 func VerifyHash(value string, hash string) (bool, string) {
 	bs := HashSha1(value)

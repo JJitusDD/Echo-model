@@ -263,6 +263,9 @@ github.com/mattn/go-colorable
 # github.com/mattn/go-isatty v0.0.20
 ## explicit; go 1.15
 github.com/mattn/go-isatty
+# github.com/mergermarket/go-pkcs7 v0.0.0-20170926155232-153b18ea13c9
+## explicit
+github.com/mergermarket/go-pkcs7
 # github.com/mitchellh/mapstructure v1.5.0
 ## explicit; go 1.14
 github.com/mitchellh/mapstructure

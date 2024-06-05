@@ -2,9 +2,10 @@ package crypt
 
 import (
 	"fmt"
-	"github.com/golang-jwt/jwt"
 	"os"
 	"time"
+
+	"github.com/golang-jwt/jwt/v5"
 
 	"github.com/labstack/echo/v4"
 	"github.com/spf13/cast"
@@ -19,19 +20,20 @@ type UserToken struct {
 
 type JwtCustomClaims struct {
 	Payload string `json:"payload"`
-	jwt.StandardClaims
+	jwt.Claims
 }
 
+// EncryptAccessToken returns a complete, signed JWT.
 func EncryptAccessToken(payload, secret string) string {
-	coeffection := cast.ToDuration(5)
-	if os.Getenv("Coeffection") != "" {
-		coeffection = cast.ToDuration(os.Getenv("Coeffection"))
+	tokenTime := cast.ToDuration(5)
+	if os.Getenv("token_time") != "" {
+		tokenTime = cast.ToDuration(os.Getenv("token_time"))
 	}
 
 	claims := &JwtCustomClaims{
 		Payload: payload,
-		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(time.Minute * coeffection).Unix(),
+		Claims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Minute * tokenTime)),
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
