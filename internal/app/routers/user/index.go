@@ -5,7 +5,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func NewUserRouter(g *echo.Echo, s *service.Service) {
+func NewRouter(g *echo.Echo, s *service.Service) {
 	routes := g.Group("/users")
 
 	// Login and logout with JWT

@@ -13,6 +13,6 @@ func Setup(e *echo.Echo, s *service.Service) {
 		return c.NoContent(http.StatusOK)
 	})
 
-	user.NewUserRouter(e, s)
+	user.NewRouter(e, s)
 
 }

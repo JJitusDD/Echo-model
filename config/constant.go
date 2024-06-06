@@ -18,9 +18,10 @@ type Config struct {
 }
 
 type SFTPConfig struct {
-	SftpAddr string `json:"sftp_addr" mapstructure:"sftp_addr"`
-	SftpUser string `json:"sftp_user" mapstructure:"sftp_user"`
-	SftpPass string `json:"sftp_pass" mapstructure:"sftp_pass"`
+	Addr string `json:"addr" mapstructure:"addr"`
+	User string `json:"user" mapstructure:"user"`
+	Pass string `json:"Pass" mapstructure:"Pass"`
+	Port int    `json:"port" mapstructure:"port"`
 }
 
 type KafkaConfig struct {
