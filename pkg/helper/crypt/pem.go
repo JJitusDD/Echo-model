@@ -1,7 +1,12 @@
 package crypt
 
 import (
+	"crypto"
+	"crypto/rand"
+	"crypto/rsa"
+	"crypto/sha256"
 	"crypto/x509"
+	"encoding/base64"
 	"encoding/pem"
 	"errors"
 	"fmt"
@@ -19,37 +24,23 @@ func SignerFromPem(pemBytes []byte, password []byte) (ssh.Signer, error) {
 	}
 
 	// handle encrypted key
-	if x509.IsEncryptedPEMBlock(pemBlock) {
-		// decrypt PEM
-		pemBlock.Bytes, err = x509.DecryptPEMBlock(pemBlock, []byte(password))
-		if err != nil {
-			return nil, fmt.Errorf("Decrypting PEM block failed %v", err)
-		}
-
-		// get RSA, EC or DSA key
-		key, err := parsePemBlock(pemBlock)
-		if err != nil {
-			return nil, err
-		}
-
-		// generate signer instance from key
-		signer, err := ssh.NewSignerFromKey(key)
-		if err != nil {
-			return nil, fmt.Errorf("Creating signer from encrypted key failed %v", err)
-		}
-
-		return signer, nil
-	} else {
-		// generate signer instance from plain key
-		signer, err := ssh.ParsePrivateKey(pemBytes)
-		if err != nil {
-			return nil, fmt.Errorf("Parsing plain private key failed %v", err)
-		}
-
-		return signer, nil
+	// get RSA, EC or DSA key
+	key, err := parsePemBlock(pemBlock)
+	if err != nil {
+		return nil, err
 	}
+
+	// generate signer instance from key
+	signer, err := ssh.NewSignerFromKey(key)
+	if err != nil {
+		return nil, fmt.Errorf("Creating signer from encrypted key failed %v", err)
+	}
+
+	return signer, nil
+
 }
 
+// parsePemBlock parse pemblock to PrivateKey
 func parsePemBlock(block *pem.Block) (interface{}, error) {
 	switch block.Type {
 	case "RSA PRIVATE KEY":
@@ -59,6 +50,7 @@ func parsePemBlock(block *pem.Block) (interface{}, error) {
 		} else {
 			return key, nil
 		}
+
 	case "EC PRIVATE KEY":
 		key, err := x509.ParseECPrivateKey(block.Bytes)
 		if err != nil {
@@ -66,6 +58,7 @@ func parsePemBlock(block *pem.Block) (interface{}, error) {
 		} else {
 			return key, nil
 		}
+
 	case "DSA PRIVATE KEY":
 		key, err := ssh.ParseDSAPrivateKey(block.Bytes)
 		if err != nil {
@@ -76,4 +69,17 @@ func parsePemBlock(block *pem.Block) (interface{}, error) {
 	default:
 		return nil, fmt.Errorf("Parsing private key failed, unsupported key type %q", block.Type)
 	}
+}
+
+// EncryptRSA -
+func EncryptRSA(datastring string, privkey string) string {
+	pemRes, _ := pem.Decode([]byte(privkey))
+	privateKeyI, _ := x509.ParsePKCS1PrivateKey(pemRes.Bytes)
+	h := sha256.New()
+	h.Write([]byte(datastring))
+	sum := h.Sum(nil)
+
+	sig, _ := rsa.SignPKCS1v15(rand.Reader, privateKeyI, crypto.SHA256, sum)
+
+	return base64.StdEncoding.EncodeToString(sig)
 }

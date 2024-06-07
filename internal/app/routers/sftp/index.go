@@ -13,4 +13,5 @@ func NewUserRouter(g *echo.Echo, s *service.Service) {
 	routes.POST("/login", s.UserLogin, s.ValidateAccesstoken(), s.VerifyHash())
 	routes.POST("/refresh-token", s.UserRefreshToken, s.ValidateAccesstoken(), s.VerifyHash())
 	routes.POST("/profile", s.UserProfile, s.ValidateAccesstoken(), s.VerifyHash())
+	routes.POST("/search", s.UserSearch)
 }

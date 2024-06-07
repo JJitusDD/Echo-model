@@ -2,8 +2,8 @@ package ssh
 
 import (
 	"fmt"
-	"io/ioutil"
 	"net"
+	"os"
 
 	"echo-model/pkg/helper/crypt"
 	"golang.org/x/crypto/ssh"
@@ -16,7 +16,7 @@ type SshClient struct {
 
 func NewSshClient(user string, host string, port int, privateKeyPath string, privateKeyPassword string) (*SshClient, error) {
 	// read private key file
-	pemBytes, err := ioutil.ReadFile(privateKeyPath)
+	pemBytes, err := os.ReadFile(privateKeyPath)
 	if err != nil {
 		return nil, fmt.Errorf("Reading private key file failed %v", err)
 	}
@@ -68,6 +68,7 @@ func (s *SshClient) RunCommand(cmd string) (string, error) {
 	return fmt.Sprintf("%s", output), err
 }
 
+// Connect a client connection to the given SSH server
 func (s *SshClient) Connect() (*ssh.Client, error) {
 	// open connection
 	conn, err := ssh.Dial("tcp", s.Server, s.Config)

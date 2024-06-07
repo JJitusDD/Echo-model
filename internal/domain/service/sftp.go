@@ -43,11 +43,13 @@ func (s *Service) SftpReadPath(c echo.Context) (err error) {
 	}
 	defer client.Close()
 
-	LoopFile(client, body.Dir)
+	LoopFile(client, body.Dir, "")
 
+	return
 }
 
-func LoopFile(client *sftp.Client, remoteDir string) {
+// LoopFile log entire directoríe and files that match some words.
+func LoopFile(client *sftp.Client, remoteDir, matching string) {
 	files, err := client.ReadDir(remoteDir)
 	if err != nil {
 		fmt.Printf("Unable to list remote dir: %v", err)
@@ -58,8 +60,9 @@ func LoopFile(client *sftp.Client, remoteDir string) {
 		name = f.Name()
 		if f.IsDir() {
 			name = name + "/"
-			LoopFile(client, remoteDir+name)
-		} else if strings.Contains(name, ".xlsx") {
+			fmt.Println(remoteDir + name)
+			LoopFile(client, remoteDir+name, matching)
+		} else if strings.Contains(name, matching) {
 			fmt.Println(remoteDir + name)
 		}
 	}
